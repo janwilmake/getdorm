@@ -1,0 +1,9 @@
+name = "getdorm"
+compatibility_date = "2025-04-21"
+dev.port = 3000
+assets.directory = "./"
+
+routes = [
+  { pattern = "getdorm.com", custom_domain = true },
+  { pattern = "www.getdorm.com", custom_domain = true }
+]
