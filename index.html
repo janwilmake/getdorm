@@ -4,193 +4,326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>You might not need durable objects - itscooldo.com</title>
+    <title>DORM - Unlimited SQLite DBs Directly In Your Worker</title>
+    <meta name="description" content="Unlimited SQLite DBs
+    Directly In Your Worker" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Facebook Meta Tags -->
+    <meta property="og:url" content="https://getdorm.com" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="DORM - Unlimited SQLite DBs Directly In Your Worker" />
+    <meta property="og:description" content="Unlimited SQLite DBs
+    Directly In Your Worker" />
+    <meta property="og:image" content="https://quickog.com/screenshot/getdorm.com" />
+    <meta property="og:image:alt" content="Unlimited SQLite DBs
+    Directly In Your Worker" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="twitter:domain" content="getdorm.com" />
+    <meta property="twitter:url" content="https://getdorm.com" />
+    <meta name="twitter:title" content="DORM - Unlimited SQLite DBs Directly In Your Worker" />
+    <meta name="twitter:description" content="Unlimited SQLite DBs
+    Directly In Your Worker" />
+    <meta name="twitter:image" content="https://quickog.com/screenshot/getdorm.com" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(to bottom, #e66465, #9198e5);
-            min-height: 100vh;
-            padding: 2rem;
+        .tweet-skeleton {
+            background: #1f2937;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 8px;
-            padding: 2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        .skeleton-line {
+            height: 12px;
+            background: #374151;
+            border-radius: 4px;
+            margin-bottom: 8px;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 2rem;
+        .skeleton-line:last-child {
+            margin-bottom: 0;
         }
 
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            background: linear-gradient(90deg,
-                    #ff0000, #ff7f00, #ffff00,
-                    #00ff00, #0000ff, #4b0082, #8b00ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            padding-bottom: 0.25rem;
+        .skeleton-line.short {
+            width: 60%;
         }
 
-        .subtitle {
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 1rem;
+        .skeleton-line.medium {
+            width: 80%;
         }
 
-        .rainbow-border {
-            height: 4px;
+        .skeleton-line.long {
             width: 100%;
-            background: linear-gradient(90deg,
-                    #ff0000, #ff7f00, #ffff00,
-                    #00ff00, #0000ff, #4b0082, #8b00ff);
-            margin-bottom: 2rem;
-            border-radius: 2px;
         }
 
-        section {
-            margin-bottom: 2rem;
+        .skeleton-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #374151;
+            margin-bottom: 12px;
         }
 
-        h2 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: #333;
-        }
+        @keyframes pulse {
 
-        p {
-            margin-bottom: 1rem;
-        }
-
-        code {
-            font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-            background-color: #f7f7f7;
-            padding: 0.2rem 0.4rem;
-            border-radius: 3px;
-            font-size: 0.9rem;
-        }
-
-        pre {
-            background-color: #f7f7f7;
-            padding: 1rem;
-            border-radius: 5px;
-            overflow-x: auto;
-            margin-bottom: 1.5rem;
-        }
-
-        .cta {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 0.8rem 1.6rem;
-            background: linear-gradient(90deg, #ff0000, #ff7f00);
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: 600;
-            transition: transform 0.2s;
-        }
-
-        .cta:hover {
-            transform: translateY(-2px);
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 3rem;
-            color: #777;
-            font-size: 0.9rem;
-        }
-
-        .signature {
-            font-style: italic;
-            margin-bottom: 0.5rem;
-        }
-
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 2rem;
+            0%,
+            100% {
+                opacity: 1;
             }
 
-            .container {
-                padding: 1.5rem;
+            50% {
+                opacity: 0.5;
             }
+        }
+
+        .tweet-container {
+            min-height: 180px;
         }
     </style>
 </head>
 
-<body>
-    <div class="container">
-        <header>
-            <h1>You might not need durable objects</h1>
-            <p class="subtitle">and that's completely okay</p>
-            <div class="rainbow-border"></div>
+<body class="bg-black text-gray-100">
+
+    <div class="content-wrapper">
+        <!-- Header -->
+        <header class="bg-gray-900/90 backdrop-blur-sm shadow-lg border-b border-gray-800">
+            <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <span class="text-3xl">🛏️</span>
+                    <h1 class="text-2xl font-bold">DORM</h1>
+                </div>
+                <div class="flex items-center space-x-4 text-sm text-gray-400">
+                    <span>OSS Turso Alternative</span>
+                    <span>•</span>
+                    <span>MIT License</span>
+                </div>
+            </div>
         </header>
 
-        <section>
-            <p>
-                Hey, I've been thinking about this for a while. We often reach for complex solutions when simpler ones
-                might do the job. Durable objects are powerful, but maybe you don't actually need them.
-            </p>
-            <p>
-                Much like how you might not need Redux or jQuery, sometimes the simplest approach is the most elegant.
-            </p>
+        <!-- Hero Section with Tweets -->
+        <section class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="grid lg:grid-cols-2 gap-12 items-start">
+                    <!-- Left side: Main content -->
+                    <div>
+                        <h2 class="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6">
+                            Unlimited SQLite DBs
+                            <span class="block text-blue-400">Directly In Your Worker</span>
+                        </h2>
+                        <p class="text-xl text-gray-300 mb-8 max-w-2xl">
+                            Build multi-tenant applications on Cloudflare with unlimited SQLite databases (10GB each),
+                            query from anywhere, built-in data explorer, and zero overhead.
+                        </p>
+
+                        <!-- CTA Buttons -->
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="https://github.com/janwilmake/dorm"
+                                class="bg-white text-black px-8 py-3 rounded-lg font-medium hover:bg-gray-200 transition inline-flex items-center justify-center">
+                                🌟 GitHub
+                            </a>
+                            <a href="https://demo.getdorm.com"
+                                class="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition inline-flex items-center justify-center">
+                                Demo
+                            </a>
+                        </div>
+
+                        <div class="mt-6">
+                            <span class="inline-flex items-center text-gray-400">
+                                <span class="text-sm">Powered by</span>
+                                <img src="https://www.cloudflare.com/img/logo-web-badges/cf-logo-on-white-bg.svg"
+                                    alt="Cloudflare" class="h-20 ml-2 invert">
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Right side: Tweets -->
+                    <div>
+                        <div class="hidden lg:block">
+                            <h3 class="text-lg font-semibold text-gray-400 mb-4">What people are saying</h3>
+                        </div>
+                        <div class="grid gap-4">
+                            <div class="tweet-container">
+                                <!-- Skeleton loader -->
+                                <div class="tweet-skeleton" id="skeleton-1">
+                                    <div class="skeleton-avatar"></div>
+                                    <div class="skeleton-line long"></div>
+                                    <div class="skeleton-line long"></div>
+                                    <div class="skeleton-line medium"></div>
+                                    <div class="skeleton-line short"></div>
+                                </div>
+                                <!-- Actual tweet (hidden until loaded) -->
+                                <blockquote class="twitter-tweet" data-theme="dark" data-cards="hidden"
+                                    style="display: none;">
+                                    <p lang="en" dir="ltr">Ship DORM 🛏️ - a Durable Object class with conventions to
+                                        unlock
+                                        unlimited production-ready SQLite databases directly in your worker, so you can
+                                        build
+                                        multi-tenant SaaS.<br><br>Repo: <a
+                                            href="https://t.co/u6Yey6sFWG">https://t.co/u6Yey6sFWG</a> ⭐️<br><br>You can
+                                        use
+                                        this to build a multi-tenant SaaS on Cloudflare, create… <a
+                                            href="https://t.co/aV7OFQNKgZ">pic.twitter.com/aV7OFQNKgZ</a></p>&mdash; Jan
+                                    Wilmake
+                                    🇺🇸 🐻 (@janwilmake) <a
+                                        href="https://twitter.com/janwilmake/status/1915123176754888929?ref_src=twsrc%5Etfw">January
+                                        16, 2025</a>
+                                </blockquote>
+                            </div>
+                            <div class="tweet-container">
+                                <!-- Skeleton loader -->
+                                <div class="tweet-skeleton" id="skeleton-2">
+                                    <div class="skeleton-avatar"></div>
+                                    <div class="skeleton-line long"></div>
+                                    <div class="skeleton-line long"></div>
+                                    <div class="skeleton-line medium"></div>
+                                    <div class="skeleton-line short"></div>
+                                </div>
+                                <!-- Actual tweet (hidden until loaded) -->
+                                <blockquote class="twitter-tweet" data-theme="dark" data-cards="hidden"
+                                    style="display: none;">
+                                    <p lang="en" dir="ltr">Build a remote SQL cursor in TS.<br><br>If you&#39;re
+                                        returning large
+                                        data from SQLite and want to cursor through it without loading the entire
+                                        dataset, you
+                                        can&#39;t easily stream it from a durable object (without DORM). But you can
+                                        cursor:<br><br>Code… <a
+                                            href="https://x.com/janwilmake/status/1920274164889354247">Link</a></p>
+                                    &mdash; Jan
+                                    Wilmake 🇺🇸 🐻 (@janwilmake) <a
+                                        href="https://twitter.com/janwilmake/status/1920274164889354247?ref_src=twsrc%5Etfw">January
+                                        30, 2025</a>
+                                </blockquote>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <section>
-            <h2>When you should reconsider:</h2>
-            <p>
-                If you're just looking for:
-            </p>
-            <pre><code>// Basic data persistence? Try:
-const simpleStorage = localStorage.getItem('my-data');
-
-// Simple state management? Maybe:
-const [state, setState] = useState(initialValue);
-
-// API coordination? Consider:
-async function fetchData() {
-  // A well-designed API might be enough
-}</code></pre>
-            <p>
-                Not every problem requires a durable, distributed, eventually consistent solution. Sometimes, a local
-                state and good error handling is all you need.
-            </p>
+        <!-- Key Benefits -->
+        <section class="py-16 bg-gray-900/50 backdrop-blur-sm">
+            <div class="max-w-6xl mx-auto px-4">
+                <h3 class="text-3xl font-bold text-center mb-10">Why DORM beats the alternatives</h3>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="text-center bg-gray-800/50 rounded-lg p-6">
+                        <div class="text-4xl mb-4">⚡</div>
+                        <h4 class="font-semibold mb-2 text-white">Query from Anywhere</h4>
+                        <p class="text-gray-400">No need to write DO handler code - query directly from your worker</p>
+                    </div>
+                    <div class="text-center bg-gray-800/50 rounded-lg p-6">
+                        <div class="text-4xl mb-4">🔄</div>
+                        <h4 class="font-semibold mb-2 text-white">JIT Migrations</h4>
+                        <p class="text-gray-400">Migrations applied when needed, just once, automatically</p>
+                    </div>
+                    <div class="text-center bg-gray-800/50 rounded-lg p-6">
+                        <div class="text-4xl mb-4">📊</div>
+                        <h4 class="font-semibold mb-2 text-white">Built-in Explorer</h4>
+                        <p class="text-gray-400">Outerbase integration for data management</p>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <section>
-            <h2>But sometimes you do need them...</h2>
-            <p>
-                And that's fine too! When you need atomic operations across distributed systems, or true durability
-                guarantees, they're perfect. Just make sure you're choosing them for the right reasons.
-            </p>
-            <p>
-                Always pick the right tool for the right job. Don't overcomplicate things because it seems like the
-                "professional" thing to do.
-            </p>
-            <a href="https://github.com/janwilmake/awesome-durable-objects" class="cta">Learn when to use what</a>
+        <!-- Use Cases -->
+        <section class="py-16">
+            <div class="max-w-6xl mx-auto px-4">
+                <h3 class="text-3xl font-bold text-center mb-10">Perfect for</h3>
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <div class="bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-700">
+                        <h4 class="font-bold text-xl mb-3 text-white">Multi-tenant SaaS</h4>
+                        <code class="block bg-gray-900 p-3 rounded text-sm mb-3 text-blue-400">
+                            name: `tenant:${tenantId}`
+                        </code>
+                        <p class="text-gray-400">One database per customer, unlimited scale</p>
+                    </div>
+                    <div class="bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-700">
+                        <h4 class="font-bold text-xl mb-3 text-white">User Profiles</h4>
+                        <code class="block bg-gray-900 p-3 rounded text-sm mb-3 text-blue-400">
+                            name: `user:${userId}`
+                        </code>
+                        <p class="text-gray-400">Edge-localized data with lightning performance</p>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <footer>
-            <p class="signature">itscooldo.com</p>
-            <p>Inspired by the clarity of Dan Abramov's thinking</p>
+        <!-- Quick Start -->
+        <section class="py-16 bg-gray-900/50 backdrop-blur-sm">
+            <div class="max-w-4xl mx-auto px-4 text-center">
+                <h3 class="text-3xl font-bold mb-8">Get Started in Seconds</h3>
+                <div class="bg-gray-800 rounded-lg p-4 mb-8 max-w-2xl mx-auto border border-gray-700">
+                    <code class="text-green-400">npm i dormroom@next</code>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="https://github.com/janwilmake/dorm"
+                        class="bg-white text-black px-8 py-3 rounded-lg font-medium hover:bg-gray-200 transition">
+                        📚 View Documentation
+                    </a>
+                    <a href="https://demo.getdorm.com"
+                        class="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition">
+                        🚀 Try Live Demo
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-gray-900 py-8 text-center text-gray-400 border-t border-gray-800">
+            <p>🛏️ DORM - OSS Turso Alternative | MIT License | Powered by Cloudflare</p>
+            <p class="mt-2">Built with ❤️ by <a href="https://x.com/janwilmake"
+                    class="text-blue-400 hover:underline">@janwilmake</a></p>
         </footer>
     </div>
+    <script>
+        // Listen for Twitter widget events
+        window.addEventListener('load', function () {
+            // Twitter's widget.js will render tweets when ready
+            if (window.twttr && window.twttr.events) {
+                window.twttr.events.bind('rendered', function (event) {
+                    // Find the skeleton associated with this tweet
+                    const tweet = event.target;
+                    const container = tweet.closest('.tweet-container');
+                    const skeleton = container.querySelector('.tweet-skeleton');
+
+                    // Hide skeleton and show tweet
+                    if (skeleton) {
+                        skeleton.style.display = 'none';
+                    }
+                    tweet.style.display = 'block';
+                });
+            } else {
+                // Fallback: check periodically if tweets are rendered
+                const checkInterval = setInterval(function () {
+                    const tweets = document.querySelectorAll('.twitter-tweet-rendered');
+                    tweets.forEach(function (tweet) {
+                        const container = tweet.closest('.tweet-container');
+                        const skeleton = container.querySelector('.tweet-skeleton');
+                        if (skeleton && skeleton.style.display !== 'none') {
+                            skeleton.style.display = 'none';
+                            tweet.style.display = 'block';
+                        }
+                    });
+
+                    // Stop checking after 10 seconds
+                    setTimeout(function () {
+                        clearInterval(checkInterval);
+                    }, 10000);
+                }, 500);
+            }
+        });
+    </script>
 </body>
 
 </html>
